@@ -1,32 +1,22 @@
 package com.hotTopic.job;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.hotTopic.domain.Article;
 import com.hotTopic.service.interfaces.IArticleService;
-import com.hotTopic.util.TopicUtil;
 
 public class FindJob {
+	
+	@Autowired
 	private IArticleService articleService;
 	
 	public void progress(){
-		//取出今天所有的Article
-		List<Article> todayArticles = articleService.getTodayArticles();
 		
-		//取出todayArticles 的“词”
-		TopicUtil.cluster(todayArticles);
-		
-		//df过程
-		
-		//**过程
-		
-		//获得当天话题
-		
-		//更新HistoryTopic（融合或新增话题）
-		TopicUtil.updateHistoryTopics(todayArticles);
-		
-		//获取今天的热点话题
-		List<Article> todayHotTopics = TopicUtil.getTodayHotTopics();
 		
 	}
 	
@@ -38,7 +28,10 @@ public class FindJob {
 	
 	
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws SQLException {
+		ApplicationContext ac = new ClassPathXmlApplicationContext("spring/applicationContext.xml");
+		IArticleService articleService = ac.getBean(IArticleService.class);
+		List<Article> todayArticles = articleService.getArticlesByDay("2015-06-05");
+		System.out.println(todayArticles.size());
 	}
 }
